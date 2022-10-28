@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,13 +30,15 @@ public class MockAnnotationTest {
     @Autowired
     StudentGrades studentGrades;
 
-    @Mock //mock for the DAO => DAO test double
+    //@Mock //mock for the DAO => DAO test double
+    @MockBean
     private ApplicationDao applicationDao;
 
-    @InjectMocks
+    //@InjectMocks
+    @Autowired
     private ApplicationService applicationService;
-    //this annotation injects the mock dependencies
-    //and will only inject dependencies annotated with @Mock or @Spy
+    //@InjectMocks: this annotation injects the mock dependencies
+    //@InjectMocks: +and will only inject dependencies annotated with @Mock or @Spy
 
     @BeforeEach
     public void beforeEach() {
@@ -69,5 +72,17 @@ public class MockAnnotationTest {
             .addGradeResultsForSingleClass(
                 studentGrades.getMathGradeResults()
             );
+    }
+
+    @DisplayName("Find Gpa")
+    @Test
+    public void assertEqualsFindGpa() {
+        when(applicationDao.findGradePointAverage(
+            studentGrades.getMathGradeResults()
+        )).thenReturn(89.31);
+        assertEquals(89.31, applicationService
+            .findGradePointAverage(
+                studentOne.getStudentGrades().getMathGradeResults()
+            ));
     }
 }
