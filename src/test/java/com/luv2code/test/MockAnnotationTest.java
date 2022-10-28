@@ -57,6 +57,17 @@ public class MockAnnotationTest {
                 studentOne.getStudentGrades().getMathGradeResults()
             ));
 
+        //verify that this method (the DAO method) was called during this whole testing process
+        /*verify(applicationDao).addGradeResultsForSingleClass(
+            studentGrades.getMathGradeResults()
+        );*/
 
+        //we can ask how many times this method was called
+        // was this method called 3 times during this given test?
+        // with 3, the test should fail because we are calling this method just once
+        verify(applicationDao, times(1))
+            .addGradeResultsForSingleClass(
+                studentGrades.getMathGradeResults()
+            );
     }
 }
